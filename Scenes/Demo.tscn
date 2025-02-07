@@ -1,0 +1,26 @@
+[gd_scene load_steps=7 format=3 uid="uid://e1xanlccnvtl"]
+
+[ext_resource type="Shader" uid="uid://cidio1kjyfm0n" path="res://Shaders/raymarch.tres" id="1_it40f"]
+
+[sub_resource type="Gradient" id="Gradient_4w34j"]
+offsets = PackedFloat32Array(0.484127, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_br0wa"]
+frequency = 0.0379
+
+[sub_resource type="NoiseTexture3D" id="NoiseTexture3D_t37fs"]
+color_ramp = SubResource("Gradient_4w34j")
+noise = SubResource("FastNoiseLite_br0wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qeuau"]
+render_priority = 0
+shader = ExtResource("1_it40f")
+shader_parameter/march_texture = SubResource("NoiseTexture3D_t37fs")
+
+[sub_resource type="BoxMesh" id="BoxMesh_polto"]
+material = SubResource("ShaderMaterial_qeuau")
+
+[node name="Root" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_polto")

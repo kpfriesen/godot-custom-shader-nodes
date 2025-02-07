@@ -1,0 +1,103 @@
+[gd_resource type="VisualShader" load_steps=7 format=3 uid="uid://cidio1kjyfm0n"]
+
+[ext_resource type="Script" path="res://Addons/ShaderNodes/raymarch.gd" id="1_q1eqt"]
+
+[sub_resource type="VisualShaderNodeCustom" id="VisualShaderNodeCustom_d0h2b"]
+default_input_values = [2, 0.01, 4, 8.0]
+initialized = true
+script = ExtResource("1_q1eqt")
+
+[sub_resource type="VisualShaderNodeTexture3DParameter" id="VisualShaderNodeTexture3DParameter_nm4c7"]
+parameter_name = "march_texture"
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_1faf1"]
+input_name = "camera_position_world"
+
+[sub_resource type="VisualShaderNodeIntConstant" id="VisualShaderNodeIntConstant_hhwbe"]
+constant = 512
+
+[sub_resource type="VisualShaderNodeFloatOp" id="VisualShaderNodeFloatOp_t6ub7"]
+default_input_values = [0, 0.0, 1, 8.0]
+operator = 3
+
+[resource]
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_lambert, specular_schlick_ggx;
+
+uniform sampler3D march_texture;
+
+
+// Raymarch
+
+        struct ray {
+            vec3 dir;
+            float val;
+            vec3 pos;
+            float dist;
+        };
+
+        ray raymarch( ray r, int steps, float max_dist, float step_size, float threshold, sampler3D volume) {
+            for(int i = 0; i < steps; ++i) {
+                r.val = texture(volume, r.pos).x;
+                r.dist += step_size;
+                r.pos += r.dir * step_size;
+                if(r.val >= threshold) {
+                    break;
+                }
+                if(r.dist >= max_dist) {
+                    break;
+                }
+            }
+            return r;
+        }
+    
+
+void fragment() {
+// Input:4
+	vec3 n_out4p0 = CAMERA_POSITION_WORLD;
+
+
+// IntConstant:5
+	int n_out5p0 = 512;
+
+
+	float n_out2p0;
+	float n_out2p1;
+	vec3 n_out2p2;
+// Raymarch:2
+	float n_in2p2 = 0.01000;
+	float n_in2p4 = 8.00000;
+	{
+		
+		            ray r;
+		                r.dir = vec3((INV_VIEW_MATRIX * vec4(-VIEW, 1.0)).xyz);
+		                r.pos = n_out4p0;
+		                r.val = 0.0;
+		                r.dist = 0.0;
+		                n_out2p0= raymarch(r, n_out5p0, n_in2p4, n_in2p2, 0.5, march_texture).dist;
+	}
+
+
+// FloatOp:6
+	float n_in6p1 = 8.00000;
+	float n_out6p0 = n_out2p0 / n_in6p1;
+
+
+// Output:0
+	ALBEDO = vec3(n_out6p0);
+
+
+}
+"
+graph_offset = Vector2(-821, -216)
+nodes/fragment/2/node = SubResource("VisualShaderNodeCustom_d0h2b")
+nodes/fragment/2/position = Vector2(-100, 80)
+nodes/fragment/3/node = SubResource("VisualShaderNodeTexture3DParameter_nm4c7")
+nodes/fragment/3/position = Vector2(-640, -40)
+nodes/fragment/4/node = SubResource("VisualShaderNodeInput_1faf1")
+nodes/fragment/4/position = Vector2(-600, 320)
+nodes/fragment/5/node = SubResource("VisualShaderNodeIntConstant_hhwbe")
+nodes/fragment/5/position = Vector2(-200, 360)
+nodes/fragment/6/node = SubResource("VisualShaderNodeFloatOp_t6ub7")
+nodes/fragment/6/position = Vector2(200, 140)
+nodes/fragment/connections = PackedInt32Array(3, 0, 2, 0, 5, 0, 2, 3, 2, 0, 6, 0, 6, 0, 0, 0, 4, 0, 2, 1)
