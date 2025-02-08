@@ -65,7 +65,7 @@ func _get_output_port_name(port):
         0:
             return "depth"
         1:
-            return "threshold"
+            return "threshold" #not implemented
         2:
             return "position"
 
@@ -82,37 +82,40 @@ func _get_output_port_type(port):
 
 func _get_global_code(mode):
     return """
-        struct ray {
-            vec3 dir;
-            float val;
-            vec3 pos;
-            float dist;
-        };
+struct ray {
+    vec3 dir;
+    float val;
+    vec3 pos;
+    float dist;
+};
 
-        ray raymarch( ray r, int steps, float max_dist, float step_size, float threshold, sampler3D volume) {
-            for(int i = 0; i < steps; ++i) {
-                r.val = texture(volume, r.pos).x;
-                r.dist += step_size;
-                r.pos += r.dir * step_size;
-                if(r.val >= threshold) {
-                    break;
-                }
-                if(r.dist >= max_dist) {
-                    break;
-                }
-            }
-            return r;
+ray raymarch( ray r, int steps, float max_dist, float step_size, float threshold, sampler3D volume) {
+    for(int i = 0; i < steps; ++i) {
+        r.val = texture(volume, r.pos).x;
+        r.dist += step_size;
+        r.pos += r.dir * step_size;
+        if(r.val >= threshold) {
+            break;
         }
+        if(r.dist >= max_dist) {
+            break;
+        }
+    }
+    return r;
+}
     """
 
 
 func _get_code(input_vars, output_vars, mode, type):
     #return output_vars[0] + " = cnoise(vec3((%s.xy + %s.xy) * %s, %s)) * 0.5 + 0.5;" % [input_vars[0], input_vars[1], input_vars[2], input_vars[3]]
     var code = """
-            ray r;
-                r.dir = vec3((INV_VIEW_MATRIX * vec4(-VIEW, 1.0)).xyz);
-                r.pos = """ + input_vars[1] + """;
-                r.val = 0.0;
-                r.dist = 0.0;
-                """
-    return code + output_vars[0] + """= raymarch(r, %s, %s, %s, 0.5, %s).dist;""" % [input_vars[3], input_vars[4], input_vars[2], input_vars[0]]
+ray r;
+    r.dir = vec3((INV_VIEW_MATRIX * vec4(-VIEW, 1.0)).xyz);
+    r.pos = """ + input_vars[1] + """;
+    r.val = 0.0;
+    r.dist = 0.0;
+    """
+    return code + """ r = raymarch(r, %s, %s, %s, 0.5, %s);""" % [input_vars[3], input_vars[4], input_vars[2], input_vars[0]] + """
+    """ + output_vars[0] + " = r.dist;" + """
+    """ + output_vars[1] + " = r.val;" + """
+    """ + output_vars[2] + " = r.pos;"

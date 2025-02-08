@@ -2,25 +2,25 @@
 
 [ext_resource type="Shader" uid="uid://cidio1kjyfm0n" path="res://Shaders/raymarch.tres" id="1_it40f"]
 
-[sub_resource type="Gradient" id="Gradient_4w34j"]
-offsets = PackedFloat32Array(0.484127, 1)
+[sub_resource type="Gradient" id="Gradient_qm4nr"]
+offsets = PackedFloat32Array(0.65873, 1)
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_br0wa"]
-frequency = 0.0379
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_lqymm"]
+frequency = 0.0217
 
-[sub_resource type="NoiseTexture3D" id="NoiseTexture3D_t37fs"]
-color_ramp = SubResource("Gradient_4w34j")
-noise = SubResource("FastNoiseLite_br0wa")
+[sub_resource type="NoiseTexture3D" id="NoiseTexture3D_eii6n"]
+color_ramp = SubResource("Gradient_qm4nr")
+noise = SubResource("FastNoiseLite_lqymm")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_qeuau"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_55801"]
 render_priority = 0
 shader = ExtResource("1_it40f")
-shader_parameter/march_texture = SubResource("NoiseTexture3D_t37fs")
+shader_parameter/march_texture = SubResource("NoiseTexture3D_eii6n")
 
-[sub_resource type="BoxMesh" id="BoxMesh_polto"]
-material = SubResource("ShaderMaterial_qeuau")
+[sub_resource type="PlaneMesh" id="PlaneMesh_6yp7s"]
+material = SubResource("ShaderMaterial_55801")
 
 [node name="Root" type="Node3D"]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_polto")
+mesh = SubResource("PlaneMesh_6yp7s")
