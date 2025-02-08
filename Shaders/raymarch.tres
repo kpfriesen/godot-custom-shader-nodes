@@ -1,6 +1,7 @@
-[gd_resource type="VisualShader" load_steps=7 format=3 uid="uid://cidio1kjyfm0n"]
+[gd_resource type="VisualShader" load_steps=9 format=3 uid="uid://cidio1kjyfm0n"]
 
 [ext_resource type="Script" path="res://Addons/ShaderNodes/raymarch.gd" id="1_q1eqt"]
+[ext_resource type="Script" path="res://Addons/ShaderNodes/height_blending.gd" id="2_7ob71"]
 
 [sub_resource type="VisualShaderNodeCustom" id="VisualShaderNodeCustom_d0h2b"]
 default_input_values = [2, 0.01, 4, 8.0]
@@ -19,6 +20,11 @@ constant = 512
 [sub_resource type="VisualShaderNodeFloatOp" id="VisualShaderNodeFloatOp_t6ub7"]
 default_input_values = [0, 0.0, 1, 8.0]
 operator = 3
+
+[sub_resource type="VisualShaderNodeCustom" id="VisualShaderNodeCustom_b1s0r"]
+default_input_values = [2, 0.5]
+initialized = true
+script = ExtResource("2_7ob71")
 
 [resource]
 code = "shader_type spatial;
@@ -89,7 +95,8 @@ void fragment() {
 
 }
 "
-graph_offset = Vector2(-821, -216)
+graph_offset = Vector2(-573, 2)
+nodes/fragment/0/position = Vector2(780, 80)
 nodes/fragment/2/node = SubResource("VisualShaderNodeCustom_d0h2b")
 nodes/fragment/2/position = Vector2(-100, 80)
 nodes/fragment/3/node = SubResource("VisualShaderNodeTexture3DParameter_nm4c7")
@@ -99,5 +106,7 @@ nodes/fragment/4/position = Vector2(-600, 320)
 nodes/fragment/5/node = SubResource("VisualShaderNodeIntConstant_hhwbe")
 nodes/fragment/5/position = Vector2(-200, 360)
 nodes/fragment/6/node = SubResource("VisualShaderNodeFloatOp_t6ub7")
-nodes/fragment/6/position = Vector2(200, 140)
-nodes/fragment/connections = PackedInt32Array(3, 0, 2, 0, 5, 0, 2, 3, 2, 0, 6, 0, 6, 0, 0, 0, 4, 0, 2, 1)
+nodes/fragment/6/position = Vector2(280, 60)
+nodes/fragment/7/node = SubResource("VisualShaderNodeCustom_b1s0r")
+nodes/fragment/7/position = Vector2(297, 343)
+nodes/fragment/connections = PackedInt32Array(3, 0, 2, 0, 5, 0, 2, 3, 2, 0, 6, 0, 4, 0, 2, 1, 6, 0, 0, 0)

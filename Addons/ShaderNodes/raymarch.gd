@@ -33,7 +33,7 @@ func _get_input_port_name(port):
         0:
             return "texture"
         1:
-            return "Position"
+            return "position"
         2:
             return "step size"
         3:
