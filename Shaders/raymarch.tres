@@ -1,14 +1,9 @@
-[gd_resource type="VisualShader" load_steps=12 format=3 uid="uid://cidio1kjyfm0n"]
+[gd_resource type="VisualShader" load_steps=9 format=3 uid="uid://cidio1kjyfm0n"]
 
 [ext_resource type="Script" path="res://Addons/ShaderNodes/raymarch.gd" id="1_q1eqt"]
-[ext_resource type="Script" path="res://Addons/ShaderNodes/height_blending.gd" id="2_7ob71"]
-
-[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_5yagl"]
-default_input_values = [0, Vector3(0, 0, 0), 1, Vector3(10, 10, 10)]
-operator = 3
 
 [sub_resource type="VisualShaderNodeCustom" id="VisualShaderNodeCustom_d0h2b"]
-default_input_values = [2, 0.032, 4, 12.0]
+default_input_values = [2, 0.08, 4, 12.0]
 initialized = true
 script = ExtResource("1_q1eqt")
 
@@ -19,16 +14,11 @@ parameter_name = "march_texture"
 input_name = "camera_position_world"
 
 [sub_resource type="VisualShaderNodeIntConstant" id="VisualShaderNodeIntConstant_hhwbe"]
-constant = 512
+constant = 1024
 
 [sub_resource type="VisualShaderNodeFloatOp" id="VisualShaderNodeFloatOp_t6ub7"]
 default_input_values = [0, 0.0, 1, 12.0]
 operator = 3
-
-[sub_resource type="VisualShaderNodeCustom" id="VisualShaderNodeCustom_b1s0r"]
-default_input_values = [2, 0.5]
-initialized = true
-script = ExtResource("2_7ob71")
 
 [sub_resource type="VisualShaderNodeFloatOp" id="VisualShaderNodeFloatOp_wwxlt"]
 default_input_values = [0, 1.0, 1, 0.0]
@@ -70,19 +60,23 @@ ray raymarch( ray r, int steps, float max_dist, float step_size, float threshold
     
 
 void fragment() {
+// ColorConstant:9
+	vec4 n_out9p0 = vec4(0.000000, 0.000000, 0.000000, 1.000000);
+
+
 // Input:4
 	vec3 n_out4p0 = CAMERA_POSITION_WORLD;
 
 
 // IntConstant:5
-	int n_out5p0 = 512;
+	int n_out5p0 = 1024;
 
 
 	float n_out2p0;
 	float n_out2p1;
 	vec3 n_out2p2;
 // Raymarch:2
-	float n_in2p2 = 0.03200;
+	float n_in2p2 = 0.08000;
 	float n_in2p4 = 12.00000;
 	{
 		
@@ -91,7 +85,7 @@ void fragment() {
 		    r.pos = n_out4p0;
 		    r.val = 0.0;
 		    r.dist = 0.0;
-		                 r = raymarch(r, n_out5p0, n_in2p4, n_in2p2, 0.5, march_texture);
+		     r = raymarch(r, n_out5p0, n_in2p4, n_in2p2, 0.5, march_texture);
 		    n_out2p0 = r.dist;
 		    n_out2p1 = r.val;
 		    n_out2p2 = r.pos;
@@ -109,29 +103,25 @@ void fragment() {
 
 
 // Output:0
-	ALBEDO = vec3(n_out8p0);
+	ALBEDO = vec3(n_out9p0.xyz);
+	EMISSION = vec3(n_out8p0);
 
 
 }
 "
-graph_offset = Vector2(-519, 60)
 nodes/fragment/0/position = Vector2(780, 80)
 nodes/fragment/2/node = SubResource("VisualShaderNodeCustom_d0h2b")
-nodes/fragment/2/position = Vector2(-240, 140)
+nodes/fragment/2/position = Vector2(100, 180)
 nodes/fragment/3/node = SubResource("VisualShaderNodeTexture3DParameter_nm4c7")
-nodes/fragment/3/position = Vector2(-640, -40)
+nodes/fragment/3/position = Vector2(-360, -120)
 nodes/fragment/4/node = SubResource("VisualShaderNodeInput_1faf1")
-nodes/fragment/4/position = Vector2(-600, 280)
+nodes/fragment/4/position = Vector2(-360, 260)
 nodes/fragment/5/node = SubResource("VisualShaderNodeIntConstant_hhwbe")
-nodes/fragment/5/position = Vector2(-460, 400)
+nodes/fragment/5/position = Vector2(-260, 420)
 nodes/fragment/6/node = SubResource("VisualShaderNodeFloatOp_t6ub7")
-nodes/fragment/6/position = Vector2(120, 160)
-nodes/fragment/7/node = SubResource("VisualShaderNodeCustom_b1s0r")
-nodes/fragment/7/position = Vector2(297, 343)
+nodes/fragment/6/position = Vector2(420, 140)
 nodes/fragment/8/node = SubResource("VisualShaderNodeFloatOp_wwxlt")
-nodes/fragment/8/position = Vector2(420, 160)
+nodes/fragment/8/position = Vector2(420, 300)
 nodes/fragment/9/node = SubResource("VisualShaderNodeColorConstant_b4u0j")
-nodes/fragment/9/position = Vector2(440, 80)
-nodes/fragment/10/node = SubResource("VisualShaderNodeVectorOp_5yagl")
-nodes/fragment/10/position = Vector2(40, 340)
-nodes/fragment/connections = PackedInt32Array(3, 0, 2, 0, 5, 0, 2, 3, 4, 0, 2, 1, 6, 0, 8, 1, 2, 2, 10, 0, 2, 0, 6, 0, 8, 0, 0, 0)
+nodes/fragment/9/position = Vector2(420, 40)
+nodes/fragment/connections = PackedInt32Array(3, 0, 2, 0, 5, 0, 2, 3, 6, 0, 8, 1, 2, 0, 6, 0, 9, 0, 0, 0, 8, 0, 0, 5, 4, 0, 2, 1)

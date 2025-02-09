@@ -1,26 +1,59 @@
-[gd_scene load_steps=7 format=3 uid="uid://e1xanlccnvtl"]
+[gd_scene load_steps=13 format=3 uid="uid://e1xanlccnvtl"]
 
 [ext_resource type="Shader" uid="uid://cidio1kjyfm0n" path="res://Shaders/raymarch.tres" id="1_it40f"]
+[ext_resource type="Shader" uid="uid://dmr2kbssdgehs" path="res://Shaders/height_blend.tres" id="2_lysmr"]
 
-[sub_resource type="Gradient" id="Gradient_qm4nr"]
-offsets = PackedFloat32Array(0.65873, 1)
+[sub_resource type="Gradient" id="Gradient_oux5j"]
+offsets = PackedFloat32Array(0.84127, 0.952381)
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_lqymm"]
-frequency = 0.0217
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_bp0ie"]
+frequency = 0.0026
+fractal_octaves = 6
+fractal_lacunarity = 2.375
+fractal_gain = 0.59
 
-[sub_resource type="NoiseTexture3D" id="NoiseTexture3D_eii6n"]
-color_ramp = SubResource("Gradient_qm4nr")
-noise = SubResource("FastNoiseLite_lqymm")
+[sub_resource type="NoiseTexture3D" id="NoiseTexture3D_3cgbg"]
+color_ramp = SubResource("Gradient_oux5j")
+noise = SubResource("FastNoiseLite_bp0ie")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_55801"]
 render_priority = 0
 shader = ExtResource("1_it40f")
-shader_parameter/march_texture = SubResource("NoiseTexture3D_eii6n")
+shader_parameter/march_texture = SubResource("NoiseTexture3D_3cgbg")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_6yp7s"]
 material = SubResource("ShaderMaterial_55801")
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3i6m2"]
+render_priority = 0
+shader = ExtResource("2_lysmr")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_uf8de"]
+material = SubResource("ShaderMaterial_3i6m2")
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ndmaw"]
+
+[sub_resource type="Sky" id="Sky_t4nek"]
+sky_material = SubResource("ProceduralSkyMaterial_ndmaw")
+
+[sub_resource type="Environment" id="Environment_ahdbl"]
+background_mode = 1
+background_color = Color(0.497609, 0.583824, 0.708049, 1)
+sky = SubResource("Sky_t4nek")
+ambient_light_source = 2
+
 [node name="Root" type="Node3D"]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="raymarch" type="MeshInstance3D" parent="."]
+transform = Transform3D(3.4229, 0, 0, 0, 1, 0, 0, 0, 3.4229, 0, 0, 0)
 mesh = SubResource("PlaneMesh_6yp7s")
+
+[node name="height blend" type="MeshInstance3D" parent="."]
+transform = Transform3D(3.4229, 0, 0, 0, 1, 0, 0, 0, 3.4229, 8.57271, 0, 0)
+mesh = SubResource("PlaneMesh_uf8de")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_ahdbl")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.951525, -0.306363, 0.0272453, -0.246966, -0.708228, 0.661378, -0.183326, -0.636047, -0.749557, 0, 0, 0)
