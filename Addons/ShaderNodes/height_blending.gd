@@ -77,7 +77,7 @@ func _get_output_port_type(port):
 func _get_global_code(mode):
     return """
 float height_blend(float a, float b, float bias, float sharpness) {
-    float delta = (-a + b) * 2.0 + 1.0;
+    float delta = ((-a + b) + 1.0) / 2.0;
     float inv_sharp = (1.0 - sharpness) / 2.0;
     float compensated_delta = clamp(delta + bias, 0.0, 1.0);
     float compressed_delta = smoothstep(0.5 - inv_sharp, 0.5 + inv_sharp, compensated_delta);

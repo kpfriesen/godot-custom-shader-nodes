@@ -4,15 +4,17 @@
 [ext_resource type="Shader" uid="uid://dmr2kbssdgehs" path="res://Shaders/height_blend.tres" id="2_lysmr"]
 
 [sub_resource type="Gradient" id="Gradient_oux5j"]
-offsets = PackedFloat32Array(0.84127, 0.952381)
+offsets = PackedFloat32Array(0.460317, 0.952381)
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_bp0ie"]
-frequency = 0.0026
+frequency = 0.0001
 fractal_octaves = 6
 fractal_lacunarity = 2.375
 fractal_gain = 0.59
 
 [sub_resource type="NoiseTexture3D" id="NoiseTexture3D_3cgbg"]
+seamless = true
+seamless_blend_skirt = 0.57
 color_ramp = SubResource("Gradient_oux5j")
 noise = SubResource("FastNoiseLite_bp0ie")
 
@@ -41,11 +43,13 @@ background_mode = 1
 background_color = Color(0.497609, 0.583824, 0.708049, 1)
 sky = SubResource("Sky_t4nek")
 ambient_light_source = 2
+tonemap_mode = 3
 
 [node name="Root" type="Node3D"]
 
 [node name="raymarch" type="MeshInstance3D" parent="."]
 transform = Transform3D(3.4229, 0, 0, 0, 1, 0, 0, 0, 3.4229, 0, 0, 0)
+visible = false
 mesh = SubResource("PlaneMesh_6yp7s")
 
 [node name="height blend" type="MeshInstance3D" parent="."]
