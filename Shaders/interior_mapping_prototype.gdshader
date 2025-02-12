@@ -49,11 +49,11 @@ void fragment() {
     //SORTING
     vec2 CombinedUV = vec2(0.0, 0.0);
     //mask out faked faces occluded behind other faces.
-    float ceiling_mask = 1.0 - step(min((left_t - ceiling_t),(front_t - ceiling_t)), 0.0);
+    float ceiling_mask = 1.0 - step(min((left_t - ceiling_t),(front_t - ceiling_t)), 0.0001);
     float front_mask = 1.0 - step(min((left_t - front_t),(ceiling_t - front_t)), 0.001);
-    float left_mask = 1.0 - step(min((ceiling_t - left_t),(front_t - left_t)), 0.0);
+    float left_mask = 1.0 - step(min((ceiling_t - left_t),(front_t - left_t)), 0.00001);
     CombinedUV += (left_tex_coord * left_mask).yx * vec2(-1.0) / ROOM_SCALE.zy;
-    CombinedUV += (ceil_tex_coord * ceiling_mask) / ROOM_SCALE.xz / grid_size + ceiling_transform;
+    CombinedUV += (ceil_tex_coord / ROOM_SCALE.xz / grid_size + ceiling_transform) * ceiling_mask;
     CombinedUV += (front_tex_coord * front_mask) * vec2(1.0, -1.0) / ROOM_SCALE.xy;
     
     ALBEDO = texture(sample_grid, CombinedUV).xyz * mix(vec3(left_mask, ceiling_mask, front_mask), vec3(1.0), 0.44);
