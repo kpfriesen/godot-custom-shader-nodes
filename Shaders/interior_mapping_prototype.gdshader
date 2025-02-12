@@ -9,10 +9,13 @@ const float FLOOR_OFFSET = 0.1;
 const vec3 ROOM_SCALE = vec3(0.251, 0.251, 0.334);
 const vec3 ROOM_OFFSET = vec3(0.0, 0.0, 0.1666);
 
-//const vec2 grid_size = vec2(3.0, 3.0);
-const float grid_size = 3.0;
+const vec2 grid_size = vec2(3.0, 3.0);
 const vec2 ceiling_offset = vec2(-.333, -.333);
 const vec2 floor_offset = vec2(0.333, -.333);
+const vec2 left_offset = vec2(-.333, .333);
+const vec2 right_offset = vec2(.333, .333);
+const vec2 front_offset = vec2(-.333, 0.0);
+const vec2 back_offset = vec2(.333, 0.0);
 
 uniform sampler2D sample_grid;
 
@@ -45,16 +48,18 @@ void fragment() {
     vec2 left_tex_coord = (obj_cam.yz + (left_t * cam2pix.yz)) * vec2(1.0, is_left * 2.0 - 1.0);
  
     vec2 ceiling_transform = (1.0 - is_floor) * ceiling_offset + (is_floor) * floor_offset;
+    vec2 front_transform = (1.0 - is_front) * back_offset + (is_front) * front_offset;
+    vec2 left_transform = (1.0 - is_left) * right_offset + (is_left) * left_offset;
    
     //SORTING
     vec2 CombinedUV = vec2(0.0, 0.0);
     //mask out faked faces occluded behind other faces.
-    float ceiling_mask = 1.0 - step(min((left_t - ceiling_t),(front_t - ceiling_t)), 0.0001);
-    float front_mask = 1.0 - step(min((left_t - front_t),(ceiling_t - front_t)), 0.001);
-    float left_mask = 1.0 - step(min((ceiling_t - left_t),(front_t - left_t)), 0.00001);
-    CombinedUV += (left_tex_coord * left_mask).yx * vec2(-1.0) / ROOM_SCALE.zy;
+    float ceiling_mask = 1.0 - step(min((left_t - ceiling_t),(front_t - ceiling_t)), 0.0);
+    float front_mask = 1.0 - step(min((left_t - front_t),(ceiling_t - front_t)), 0.0);
+    float left_mask = 1.0 - step(min((ceiling_t - left_t),(front_t - left_t)), 0.0);
+    CombinedUV += ((left_tex_coord).yx * vec2(-1.0) / ROOM_SCALE.zy / grid_size + left_transform) * left_mask;
     CombinedUV += (ceil_tex_coord / ROOM_SCALE.xz / grid_size + ceiling_transform) * ceiling_mask;
-    CombinedUV += (front_tex_coord * front_mask) * vec2(1.0, -1.0) / ROOM_SCALE.xy;
+    CombinedUV += (front_tex_coord * vec2(1.0, -1.0) / ROOM_SCALE.xy / grid_size + front_transform) * front_mask;
     
     ALBEDO = texture(sample_grid, CombinedUV).xyz * mix(vec3(left_mask, ceiling_mask, front_mask), vec3(1.0), 0.44);
 }
