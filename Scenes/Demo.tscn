@@ -3,28 +3,24 @@
 [ext_resource type="Shader" uid="uid://cidio1kjyfm0n" path="res://Shaders/raymarch.tres" id="1_it40f"]
 [ext_resource type="Shader" uid="uid://dmr2kbssdgehs" path="res://Shaders/height_blend.tres" id="2_lysmr"]
 
-[sub_resource type="Gradient" id="Gradient_oux5j"]
-offsets = PackedFloat32Array(0.460317, 0.952381)
+[sub_resource type="Gradient" id="Gradient_npk1w"]
+offsets = PackedFloat32Array(0.801587, 1)
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_bp0ie"]
-frequency = 0.0001
-fractal_octaves = 6
-fractal_lacunarity = 2.375
-fractal_gain = 0.59
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_pmr8l"]
 
-[sub_resource type="NoiseTexture3D" id="NoiseTexture3D_3cgbg"]
-seamless = true
-seamless_blend_skirt = 0.57
-color_ramp = SubResource("Gradient_oux5j")
-noise = SubResource("FastNoiseLite_bp0ie")
+[sub_resource type="NoiseTexture3D" id="NoiseTexture3D_1k2dw"]
+color_ramp = SubResource("Gradient_npk1w")
+noise = SubResource("FastNoiseLite_pmr8l")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_55801"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_twns8"]
 render_priority = 0
 shader = ExtResource("1_it40f")
-shader_parameter/march_texture = SubResource("NoiseTexture3D_3cgbg")
+shader_parameter/march_texture = SubResource("NoiseTexture3D_1k2dw")
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_6yp7s"]
-material = SubResource("ShaderMaterial_55801")
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_es1l2"]
+material = SubResource("ShaderMaterial_twns8")
+radius = 1.0
+height = 4.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3i6m2"]
 render_priority = 0
@@ -48,12 +44,12 @@ tonemap_mode = 3
 [node name="Root" type="Node3D"]
 
 [node name="raymarch" type="MeshInstance3D" parent="."]
-transform = Transform3D(3.4229, 0, 0, 0, 1, 0, 0, 0, 3.4229, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.97267, 0)
 visible = false
-mesh = SubResource("PlaneMesh_6yp7s")
+mesh = SubResource("CapsuleMesh_es1l2")
 
 [node name="height blend" type="MeshInstance3D" parent="."]
-transform = Transform3D(3.4229, 0, 0, 0, 1, 0, 0, 0, 3.4229, 8.57271, 0, 0)
+transform = Transform3D(2.05374, 0, 0, 0, 1, 0, 0, 0, 2.05374, 8.57207, 0.0200467, -0.00512695)
 mesh = SubResource("PlaneMesh_uf8de")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
