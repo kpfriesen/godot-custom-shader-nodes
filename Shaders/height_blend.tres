@@ -57,12 +57,12 @@ default_input_values = [1, 0.0, 2, 1.0, 3, -0.1, 4, 0.1]
 [sub_resource type="VisualShaderNodeReroute" id="VisualShaderNodeReroute_ppk4g"]
 
 [sub_resource type="VisualShaderNodeFrame" id="VisualShaderNodeFrame_trhrs"]
-size = Vector2(244, 634)
+size = Vector2(244, 398)
 title = "Height Textures"
 attached_nodes = PackedInt32Array(11, 6)
 
 [sub_resource type="VisualShaderNodeFrame" id="VisualShaderNodeFrame_e37kb"]
-size = Vector2(564, 1372)
+size = Vector2(564, 1238)
 title = "PBR Textures"
 attached_nodes = PackedInt32Array(10, 15, 9, 5, 7, 13, 12, 8)
 
@@ -299,7 +299,6 @@ void fragment() {
 
 }
 "
-graph_offset = Vector2(-475, -2)
 nodes/fragment/0/position = Vector2(660, 180)
 nodes/fragment/2/node = SubResource("VisualShaderNodeCustom_w6xg8")
 nodes/fragment/2/position = Vector2(-1100, 460)
