@@ -1,8 +1,9 @@
-[gd_scene load_steps=17 format=3 uid="uid://e1xanlccnvtl"]
+[gd_scene load_steps=18 format=3 uid="uid://e1xanlccnvtl"]
 
 [ext_resource type="Shader" uid="uid://cidio1kjyfm0n" path="res://Shaders/raymarch.tres" id="1_it40f"]
 [ext_resource type="Shader" uid="uid://dmr2kbssdgehs" path="res://Shaders/height_blend.tres" id="2_lysmr"]
 [ext_resource type="Shader" path="res://Shaders/interior_mapping_prototype.gdshader" id="3_5mn1n"]
+[ext_resource type="Texture2D" uid="uid://bajyfqynm7ro7" path="res://Assets/Textures/Rooms/roommap_01_albedo.png" id="4_fgm22"]
 [ext_resource type="Texture2D" uid="uid://crmu77mv51c70" path="res://Assets/Textures/Prototype/CustomUVChecker_byValle_1K.png" id="4_u35ap"]
 
 [sub_resource type="Gradient" id="Gradient_npk1w"]
@@ -41,26 +42,29 @@ background_mode = 1
 background_color = Color(0.497609, 0.583824, 0.708049, 1)
 sky = SubResource("Sky_t4nek")
 ambient_light_source = 2
-ambient_light_color = Color(0.304539, 0.365158, 0.372122, 1)
+ambient_light_color = Color(0.413873, 0.486459, 0.494787, 1)
 tonemap_mode = 3
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_7kb8e"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3w2k2"]
 render_priority = 0
 shader = ExtResource("3_5mn1n")
-shader_parameter/sample_grid = ExtResource("4_u35ap")
+shader_parameter/room_a = ExtResource("4_fgm22")
+shader_parameter/room_b = ExtResource("4_u35ap")
 
 [sub_resource type="BoxMesh" id="BoxMesh_5i11c"]
-material = SubResource("ShaderMaterial_7kb8e")
+material = SubResource("ShaderMaterial_3w2k2")
+size = Vector3(1, 2, 1)
 
 [node name="Root" type="Node3D"]
 
 [node name="raymarch" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.97267, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.897387, 0)
 visible = false
 mesh = SubResource("CapsuleMesh_es1l2")
 
 [node name="height blend" type="MeshInstance3D" parent="."]
 transform = Transform3D(2.05374, 0, 0, 0, 1, 0, 0, 0, 2.05374, 8.57207, 0.0200467, -0.00512695)
+visible = false
 mesh = SubResource("PlaneMesh_uf8de")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -70,5 +74,5 @@ environment = SubResource("Environment_ahdbl")
 transform = Transform3D(0.912322, 0.310808, 0.266586, -0.409156, 0.666267, 0.623442, 0.0161529, -0.677856, 0.735017, 0, 0, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.36939, 0, 0)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -2.36939, 1.56092, 0)
 mesh = SubResource("BoxMesh_5i11c")
